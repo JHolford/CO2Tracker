@@ -1,6 +1,7 @@
 <?php
 require_once('authorise.php');
 include('connection.php');
+
 // session_start();
 //The rest of this script will not execute if the session check in authorise.php fails and
 //the user will have been redirected to a different page
@@ -22,22 +23,22 @@ include("navbar.php");
 
 ?>
 <!-- Centered Tabs -->
-<ul class="nav nav-pills nav-justified">
+<!-- <ul class="nav nav-pills nav-justified"> -->
 <?php
-$moduleQuery = "SELECT * FROM CO2Modules";
-$result = mysqli_query($conn, $moduleQuery);
-$moduleList = array();
-
-
-while ($row = mysqli_fetch_assoc($result)) {
-  echo ('<li><a data-toggle="pill" class="col-sm" href="#');
-  echo ($row["Module_Name"]);
-  echo ('">');
-  echo ($row["Module_Name"]);
-  echo ('</a></li>');
-
-};
-
+// $moduleQuery = "SELECT * FROM CO2Modules";
+// $result = mysqli_query($conn, $moduleQuery);
+// $moduleList = array();
+//
+//
+// while ($row = mysqli_fetch_assoc($result)) {
+//   echo ('<li><a data-toggle="pill" class="col-sm" href="#');
+//   echo ($row["Module_Name"]);
+//   echo ('">');
+//   echo ($row["Module_Name"]);
+//   echo ('</a></li>');
+//
+// };
+//
 
 ?>
   <!-- <li><a data-toggle="pill" class="col-sm" href="#Home">| Home | </a></li>
@@ -51,6 +52,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 <div class="tab-content">
   <?php
   // Run mySQL query to pull the vehicles that are in the Top X from last week
+  include("connection.php");
 $moduleQuery = "SELECT * FROM CO2Modules";
 $result = mysqli_query($conn, $moduleQuery);
 $moduleList = array();
@@ -63,7 +65,7 @@ while ($row = mysqli_fetch_assoc($result)) {
     echo ($row["Module_Name"]);
     echo('</h3>
     <p>');
-    echo ($row["Module_File"]);
+    include($row["Module_File"]);
     echo ('</p></div>');
 
   };

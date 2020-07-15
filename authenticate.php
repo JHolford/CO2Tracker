@@ -40,6 +40,9 @@ while($row = mysqli_fetch_assoc($result)) {
 					$usernameLookup = $row['username'];
 					$passwordLookup = $row['password'];
 					$passlist[$usernameLookup]=$passwordLookup;
+					if ($row['username']==$username){
+						$_SESSION['CO2Count']=$row['CO2Count'];
+					};
 				}
 
 				mysqli_close($conn);
@@ -52,6 +55,10 @@ if(password_verify($password,$passlist[$username])){
 	//session_regenerate_id();
 	$_SESSION['id'] = session_id();
 	$_SESSION['username'] = $username;
+	// $CO2query = "SELECT * FROM CO2Accounts";
+	// $CO2result = mysqli_query($conn, $CO2query);
+	// $CO2row = mysql_fetch_array($CO2result);
+	// $_SESSION['CO2Count']=$CO2row['CO2Count'];
 	// $_SESSION['voteList'] = array();
 
 	//Set admin status.
