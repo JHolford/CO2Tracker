@@ -72,7 +72,7 @@ if(password_verify($password,$passlist[$username])){
 	// 	$_SESSION['admin'] = false;
 	// }
 
-	$location = 'home.php';
+	$location = 'home.php#home';
 }else{
 	// FAILURE
 	$location = 'badauth.php';

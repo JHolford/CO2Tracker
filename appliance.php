@@ -1,5 +1,24 @@
 <?php
 
-echo ($_SESSION["CO2Count"]);
+include("connection.php");
+
+$ApplianceQuery = "SELECT * FROM CO2Appliances";
+$AppResult = mysqli_query($conn, $ApplianceQuery);
+echo ("<form action='updateCO2.php' method='post'>");
+while ($row = mysqli_fetch_assoc($AppResult)) {
+  echo ("<label>");
+  echo ($row["Appliance_Name"]);
+  echo (":<span style='color:grey'>");
+  echo ($row["Appliance_CO2_Desc"]);
+  echo("</span></label><br>");
+  echo ("<input type='number' id='");
+  echo ($row["Appliance_Name"]);
+  echo ("' name='");
+  echo ($row["Appliance_Name"]);
+  echo ("' value='0'><br><br>");
+
+};
+echo ("<input type='submit' value='Submit'>");
+echo ("</form>");
 
 ?>
