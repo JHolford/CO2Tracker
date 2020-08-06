@@ -65,6 +65,30 @@ while ($row = mysqli_fetch_assoc($result)) {
     echo ($row["Module_Name"]);
     echo('</h3>
     <p>');
+    if ($row["JSON_Name"] != "") {
+
+      // Create a new cURL resource
+      $ch = curl_init($row["API_URL"]);
+
+      // Set the username and password
+      curl_setopt($ch, CURLOPT_USERPWD, $row['username:password']);
+
+      // Set the content type to application/json
+      curl_setopt($ch, CURLOPT_HTTPHEADER, array("Accept: application/json"));
+
+      // Return response instead of outputting
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+      // Execute the POST request
+      ${$row["JSON_Name"]} = curl_exec($ch);
+
+      // Close cURL resource
+      curl_close($ch);
+
+
+
+      // ${$row["JSON_Name"]} = $row["API_URL"];
+    };
     include($row["Module_File"]);
     echo ('</p></div>');
 
