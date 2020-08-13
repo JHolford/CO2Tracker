@@ -19,8 +19,8 @@
     <?php
 
     echo ('<li><span  class="col-sm" href="#">Current CO2 Saving: ');
-    echo ($_SESSION["CO2Count"]);
-    echo ('g</span></li>');
+    echo ($_COOKIE["CO2Count"]/1000);
+    echo ('kg</span></li>');
 
 
     $moduleQuery = "SELECT * FROM CO2Modules";

@@ -67,8 +67,19 @@ while ($row = mysqli_fetch_assoc($result)) {
     <p>');
     if ($row["JSON_Name"] != "") {
 
+
+if ($row["Query1"]=="" || $row["Param1"]==""){
+
       // Create a new cURL resource
       $ch = curl_init($row["API_URL"]);
+} else if ($row["Query2"]=="" || $row["Param2"]==""){
+      // Create a new cURL resource
+      $ch = curl_init($row["API_URL"].$row["Query1"].$row["Param1"]);
+
+} else {
+          // Create a new cURL resource
+          $ch = curl_init($row["API_URL"].$row["Query1"].$row["Param1"].$row["Query2"].$row["Param2"]);
+}
 
       // Set the username and password
       curl_setopt($ch, CURLOPT_USERPWD, $row['username:password']);

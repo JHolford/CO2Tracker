@@ -41,7 +41,8 @@ while($row = mysqli_fetch_assoc($result)) {
 					$passwordLookup = $row['password'];
 					$passlist[$usernameLookup]=$passwordLookup;
 					if ($row['username']==$username){
-						$_SESSION['CO2Count']=$row['CO2Count'];
+						// $_SESSION['CO2Count']=$row['CO2Count'];
+						setcookie('CO2Count', $row['CO2Count']);
 					};
 				}
 
