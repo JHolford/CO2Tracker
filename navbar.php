@@ -19,7 +19,8 @@
     <?php
 
     echo ('<li><span  class="col-sm" href="#">Current CO2 Saving: ');
-    echo ($_COOKIE["CO2Count"]/1000);
+    echo (number_format((float)($_COOKIE["CO2Count"]/1000), 2, '.', ''));
+    // echo (round_to_2dp($_COOKIE["CO2Count"]/1000));
     echo ('kg</span></li>');
 
 

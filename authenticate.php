@@ -33,6 +33,7 @@ if ($password==""){
  * in a database of some sort.  The hashed versions would be compared so the actual
  * password never has to be stored
  */
+ setcookie("Eco_Rec","false");
 $passQuery = "SELECT * FROM CO2Accounts";
 $result = mysqli_query($conn, $passQuery);
 $passlist = array();

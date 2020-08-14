@@ -20,6 +20,35 @@ include('connection.php');
 <?php
 // Include navbar, comment functionality and vote functionality.
 include("navbar.php");
+if ($_COOKIE["CO2Increase"]!=0){
+  echo '<script type="text/javascript">';
+  if ($_COOKIE["CO2Saved"]=="true"){
+    echo ' alert("Well Done! You\'ve just saved ';
+    echo (number_format((float)($_COOKIE["CO2Increase"]/1000), 2, '.', ''));
+    echo 'kg of CO2 compared to the UK Average for the tracked activity';
+    if ($_COOKIE["Eco_Rec"]=="true"){
+      echo ('\n\n To further improve your energy savings, try using an Eco setting, where available!');
+    };
+  }else{
+    echo ' alert("Oh No! Unfortunately you\'ve just generated ';
+    echo (number_format((float)(-$_COOKIE["CO2Increase"]/1000), 2, '.', ''));
+    echo 'kg more CO2 compared to the UK Average for the tracked activity :(';
+    if ($_COOKIE["Eco_Rec"]=="true"){
+      echo ('\n\n To improve your energy savings, try using an Eco setting, where available!');
+    };
+  }
+  echo '")</script>';
+  setcookie("CO2Increase", 0);
+  setcookie("Eco_Rec", "false");
+}else{
+  if ($_COOKIE["Eco_Rec"]=="true"){
+    echo '<script type="text/javascript">';
+    echo ' alert("To improve your energy savings, try using an Eco setting, where available!")';
+    echo '</script>';
+    setcookie("Eco_Rec", "false");
+  };
+};
+
 
 ?>
 <!-- Centered Tabs -->
@@ -96,7 +125,7 @@ if ($row["Query1"]=="" || $row["Param1"]==""){
       // Close cURL resource
       curl_close($ch);
 
-
+setcookie($row["JSON_Name"], ${$row["JSON_Name"]});
 
       // ${$row["JSON_Name"]} = $row["API_URL"];
     };

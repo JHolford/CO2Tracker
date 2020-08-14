@@ -129,25 +129,54 @@ $AppResult = mysqli_query($conn, $ApplianceQuery);
 
 while ($row = mysqli_fetch_assoc($AppResult)) {
 	$appname=$row["Appliance_Name"];
-	if ($row["Appliance_CO2"] !=0){
-		$CO2IncPerRow = $row["Appliance_CO2_Avg"]-($_POST[$appname]*$row["Appliance_CO2"]);
+  if ($_POST[$appname]<>0) {
+  // echo "<br />";
+  // echo "<br />";
+  // echo ($row["Appliance_Name"]);
+  // echo "<br />";
+  $CO2IncPerRow=0;
+
+	if ($row["Appliance_CO2"]!=0){
+    $CO2IncPerRow = $row["Appliance_CO2_Avg"]-($_POST[$appname]*$row["Appliance_CO2"]);
 	} else {
-		// if $Appliance_JSON['items'];
-		// echo $Appliance_JSON1->$row["API_Normal"]->kWhPerCycle;
-    $CO2IncPerRow = $_POST[$appname]*($CO2ValuesArr[$row["API_Normal"]]-$CO2ValuesArr[$row["API_Eco"]])*28307;
+        if(isset($_POST[$appname."_Eco1"]) && isset($_POST[$appname."_Eco2"])) {
+          // echo ($_POST[$appname."_Eco1"]);
+          // echo ($_POST[$appname."_Eco2"]);
+          $CO2IncPerRow = $_POST[$appname]*($CO2ValuesArr[$row["API_Normal"]]-$CO2ValuesArr[$row["API_Eco2"]])*28307;
+
+
+        } else {
+          if(isset($_POST[$appname."_Eco2"])) {
+            // echo ($_POST[$appname."_Eco2"]);
+            $CO2IncPerRow = $_POST[$appname]*($CO2ValuesArr[$row["API_Eco1"]]-$CO2ValuesArr[$row["API_Eco2"]])*28307;
+
+
+          } else {
+            if(isset($_POST[$appname."_Eco1"])) {
+              // echo ($_POST[$appname."_Eco1"]);
+              $CO2IncPerRow = $_POST[$appname]*($CO2ValuesArr[$row["API_Normal"]]-$CO2ValuesArr[$row["API_Eco1"]])*28307;
+            } else {
+                setcookie('Eco_Rec', "true");
+            };
+
+
+    // $CO2IncPerRow = $_POST[$appname]*($CO2ValuesArr[$row["API_Normal"]]-$CO2ValuesArr[$row["API_Eco1"]])*28307;
     // echo "<br /> Normal: ";
     // echo $CO2ValuesArr[$row["API_Normal"]];
-    // echo "<br /> Eco: ";
-    // echo $CO2ValuesArr[$row["API_Eco"]];
-    // echo "<br /> Inc Per Row: ";
-    // echo $CO2IncPerRow;
-		}
+    // echo "<br /> Eco1: ";
+    // echo $CO2ValuesArr[$row["API_Eco1"]];
+    // echo "<br /> Eco2: ";
+    // echo $CO2ValuesArr[$row["API_Eco2"]];
+
+}}};
 
 		//$CO2IncPerRow = $_POST[$appname]*($row["Appliance_CO2"]-)
-
+  // echo "<br /> Inc Per Row: ";
+  // echo $CO2IncPerRow;
 	$CO2Increase=$CO2Increase+$CO2IncPerRow;
   // echo "<br /> Increase: ";
   // echo $CO2Increase;
+}
 };
 
 
@@ -159,7 +188,13 @@ setcookie('CO2Count', ($_COOKIE['CO2Count']+$CO2Increase));
 
 // echo $username;
 // echo $CO2Increase;
-
+setcookie('CO2Increase', $CO2Increase);
+if ($CO2Increase>0){
+  setcookie('CO2Saved', "true");
+};
+if ($CO2Increase<0){
+  setcookie('CO2Saved', "false");
+};
 
 header("Location: home.php");
 exit;
