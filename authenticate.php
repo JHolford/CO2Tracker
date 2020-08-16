@@ -34,6 +34,7 @@ if ($password==""){
  * password never has to be stored
  */
  setcookie("Eco_Rec","false");
+ setcookie("CO2Increase",0);
 $passQuery = "SELECT * FROM CO2Accounts";
 $result = mysqli_query($conn, $passQuery);
 $passlist = array();

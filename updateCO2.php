@@ -5,6 +5,28 @@ include("connection.php");
 session_start();
 $CO2Increase=0;
 
+function darkenBackground() {
+
+  if ($_COOKIE["CO2Increase"]!=0){
+    if ($_COOKIE["CO2Saved"]==1){
+      if ($_COOKIE['BackGreen']>245){
+          setcookie('BackGreen', 255);
+      } else {
+         setcookie('BackGreen', $_COOKIE['BackGreen']+10);
+      }
+    } else {
+       if ($_COOKIE['BackGreen']<10){
+         setcookie('BackGreen', 0);
+     } else {
+        setcookie('BackGreen', $_COOKIE['BackGreen']-10);
+       };
+    }
+
+  };
+
+
+};
+
 // echo $_COOKIE["Appliance_JSON"];
 $Appliance_JSON1 = $_COOKIE["Appliance_JSON"];
 $Appliance_JSON = json_decode($_COOKIE["Appliance_JSON"],true);
@@ -156,7 +178,7 @@ while ($row = mysqli_fetch_assoc($AppResult)) {
               // echo ($_POST[$appname."_Eco1"]);
               $CO2IncPerRow = $_POST[$appname]*($CO2ValuesArr[$row["API_Normal"]]-$CO2ValuesArr[$row["API_Eco1"]])*28307;
             } else {
-                setcookie('Eco_Rec', "true");
+                setcookie('Eco_Rec', 1);
             };
 
 
@@ -190,11 +212,14 @@ setcookie('CO2Count', ($_COOKIE['CO2Count']+$CO2Increase));
 // echo $CO2Increase;
 setcookie('CO2Increase', $CO2Increase);
 if ($CO2Increase>0){
-  setcookie('CO2Saved', "true");
+  setcookie('CO2Saved', 1);
 };
 if ($CO2Increase<0){
-  setcookie('CO2Saved', "false");
+  setcookie('CO2Saved', 0);
 };
+// echo "Pre run";
+// darkenBackground();
+// echo "Post run";
 
 header("Location: home.php");
 exit;

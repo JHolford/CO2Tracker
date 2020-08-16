@@ -12,12 +12,12 @@ echo ("<form action='updateCO2.php' method='post'>");
 // echo $_COOKIE['Appliance_JSON'];
 // echo ('</br>');
 while ($row = mysqli_fetch_assoc($AppResult)) {
-  echo ("<label style='font-size:30'>");
+  echo ("<label style='font-size:27'>");
   echo ($row["Appliance_Name"]);
-  echo (":</label><br /><span style='color:grey'>");
+  echo (":</label><br /><span class='CO2Desc'>");
   echo ($row["Appliance_CO2_Desc"]);
   echo("</span><br>");
-  echo ("<input type='number' id='");
+  echo ("<input type='number' onkeypress='return event.charCode >= 48' min='0' id='");
   echo ($row["Appliance_Name"]);
   echo ("' name='");
   echo ($row["Appliance_Name"]);
@@ -52,7 +52,7 @@ while ($row = mysqli_fetch_assoc($AppResult)) {
   }
 echo ("<br>");
 };
-echo ("<input type='submit' value='Submit'>");
+echo ("<input class='button' type='submit' value='Submit'>");
 echo ("</form>");
 
 // $_SESSION('Appliance_Data') = $Appliance_JSON;
