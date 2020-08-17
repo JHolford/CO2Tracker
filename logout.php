@@ -1,5 +1,5 @@
+<!-- This file is reused from the Web Tech Module Coursework -->
 <?php
-
 
 //destroys the session so next time session_start() is run a new session id will be generated
 session_start();
@@ -13,7 +13,7 @@ unset($_SESSION['username']);
    <link rel="stylesheet" href="Style.css" >
   <title>Logout</title>
  </head>
- <body class="sitewide">
+ <body>
    <?php
    include("navbar.php");
    ?>

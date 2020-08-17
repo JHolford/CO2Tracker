@@ -1,3 +1,4 @@
+<!-- This authentication system is adapted from the Web Tech Module Coursework -->
 <html>
  <head>
    <!-- Import Bootstrap and CSS file -->
@@ -6,7 +7,7 @@
 
   <title>Registration</title>
  </head>
- <body class="sitewide">
+ <body>
 
 <?php
 // Include navbar
@@ -15,7 +16,7 @@ include("navbar.php");
   <h2>Registration</h2>
 
   Please create a username and password below:
-
+<!-- Form that will send user details to a php file that inserts new user records -->
   <form action="insertRecord.php" method="POST">
    Enter your username:<br />
    <input type="text" name="username" />

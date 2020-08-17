@@ -1,4 +1,6 @@
-<?php include("connection.php");
+<!-- This file is reused from the Web Tech Module Coursework -->
+<?php
+include("connection.php");
 
 $username = $_POST['username'];
 //Break if user didn't set a username

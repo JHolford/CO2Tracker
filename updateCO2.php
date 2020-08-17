@@ -3,106 +3,40 @@ include("connection.php");
 mysqli_close($conn);
 include("connection.php");
 session_start();
+
+// Reset CO2Increase amount
 $CO2Increase=0;
 
-function darkenBackground() {
+// decode the Appliance JSON
+$data = gzinflate($_COOKIE['Appliance_JSON']);
+$dataDecoded= json_decode($data,true);
+// Create the Array that will be used to compare kWhPerCycle of different Appliance IDs
+$CO2ValuesArr = array();
 
-  if ($_COOKIE["CO2Increase"]!=0){
-    if ($_COOKIE["CO2Saved"]==1){
-      if ($_COOKIE['BackGreen']>245){
-          setcookie('BackGreen', 255);
-      } else {
-         setcookie('BackGreen', $_COOKIE['BackGreen']+10);
-      }
-    } else {
-       if ($_COOKIE['BackGreen']<10){
-         setcookie('BackGreen', 0);
-     } else {
-        setcookie('BackGreen', $_COOKIE['BackGreen']-10);
-       };
-    }
+// Loop through initial JSON and enter each item's ID along with its kWhPerCycle
+foreach ($dataDecoded['items'] as $item) {
 
+  foreach ($item['values'] as $paths) {
+    if ($paths['path']=="kWhPerCycle"){
+
+      $CO2ValuesArr[$item['uid']]=$paths['value'];
+    };
   };
-
 
 };
 
-// echo $_COOKIE["Appliance_JSON"];
-$Appliance_JSON1 = $_COOKIE["Appliance_JSON"];
-$Appliance_JSON = json_decode($_COOKIE["Appliance_JSON"],true);
-
-
-
-// function prettyPrint( $json )
-// {
-//     $result = '';
-//     $level = 0;
-//     $in_quotes = false;
-//     $in_escape = false;
-//     $ends_line_level = NULL;
-//     $json_length = strlen( $json );
-//
-//     for( $i = 0; $i < $json_length; $i++ ) {
-//         $char = $json[$i];
-//         $new_line_level = NULL;
-//         $post = "";
-//         if( $ends_line_level !== NULL ) {
-//             $new_line_level = $ends_line_level;
-//             $ends_line_level = NULL;
-//         }
-//         if ( $in_escape ) {
-//             $in_escape = false;
-//         } else if( $char === '"' ) {
-//             $in_quotes = !$in_quotes;
-//         } else if( ! $in_quotes ) {
-//             switch( $char ) {
-//                 case '}': case ']':
-//                     $level--;
-//                     $ends_line_level = NULL;
-//                     $new_line_level = $level;
-//                     break;
-//
-//                 case '{': case '[':
-//                     $level++;
-//                 case ',':
-//                     $ends_line_level = $level;
-//                     break;
-//
-//                 case ':':
-//                     $post = " ";
-//                     break;
-//
-//                 case " ": case "\t": case "\n": case "\r":
-//                     $char = "";
-//                     $ends_line_level = $new_line_level;
-//                     $new_line_level = NULL;
-//                     break;
-//             }
-//         } else if ( $char === '\\' ) {
-//             $in_escape = true;
-//         }
-//         if( $new_line_level !== NULL ) {
-//             $result .= "\n".str_repeat( "\t", $new_line_level );
-//         }
-//         $result .= $char.$post;
-//     }
-//
-//     return $result;
-// }
-//
-//
-// prettyPrint( $Appliance_JSON1 ) === prettyPrint( prettyPrint( $Appliance_JSON1 ) );
-
-$CO2ValuesArr = array();
+// If the results of the first call are Truncated, the call will need to
+// be repeated with different start points to ensure that we have all of the items
+if ($dataDecoded["resultsTruncated"]){
+  // The API url could be loaded from the database as on the home page, however this would add
+  // unneccessary load to the server considering that this updateCO2.php is dedicated to the Appliance page anyway
 $url = "https://api.carbonkit.net/3.6/categories/Kitchen_generic/items;values?kWhPerYear=0";
-$resStart = 0;
+$resStart = 51;
 $resLimit = 50;
+$loopNumber=1;
 $pswd = "v8s60:BasicAPIPassword1";
-
+// Loop through the new data at least once
 do {
-
-
-
 // Create a new cURL resource
   $ch = curl_init($url."&resultStart=".$resStart."&resultLimit=".$resLimit);
 
@@ -120,107 +54,90 @@ do {
 
   // Close cURL resource
   curl_close($ch);
+
 $CO2_JSON1 =json_decode($CO2_JSON,true);
-// echo $JSON1;
-// echo $JSON;
+
 
 
 foreach ($CO2_JSON1['items'] as $item) {
-  // echo 'uid: ' . $item['uid'].'<br />';
-  // echo 'Values: ';
+
   foreach ($item['values'] as $paths) {
     if ($paths['path']=="kWhPerCycle"){
-    // print_r($paths);
-    // print_r($paths['value']);
+
     $CO2ValuesArr[$item['uid']]=$paths['value'];
   }}
-  // echo '<br />';
-  // echo '<br />';
+
 }
 
-    // prettyPrint( $JSON ) === prettyPrint( prettyPrint( $JSON ) );
-// echo "hello";
-// print_r($CO2ValuesArr);
+
 $resStart=$resStart+$resLimit;
+// Stop looping when the results are no longer truncated
 } while ($CO2_JSON1["resultsTruncated"]);
+};
 
 
-
+// This section compares values from our CO2ValuesArr array
+// to the ID's of our items from the database.
+// It then performs a calculation based on those figures to
+// know how much needs to be added to our total
 $ApplianceQuery = "SELECT * FROM CO2Appliances";
 $AppResult = mysqli_query($conn, $ApplianceQuery);
 
 while ($row = mysqli_fetch_assoc($AppResult)) {
 	$appname=$row["Appliance_Name"];
+  // Only perform calculation if the value entered isn't zero
   if ($_POST[$appname]<>0) {
-  // echo "<br />";
-  // echo "<br />";
-  // echo ($row["Appliance_Name"]);
-  // echo "<br />";
   $CO2IncPerRow=0;
-
+// If values were manually entered on the database (For instance, with our kettle)
+// then it uses the manual figures
 	if ($row["Appliance_CO2"]!=0){
     $CO2IncPerRow = $row["Appliance_CO2_Avg"]-($_POST[$appname]*$row["Appliance_CO2"]);
 	} else {
+    // Now it checks to see the combination of Eco mode settings to determine the calculation
         if(isset($_POST[$appname."_Eco1"]) && isset($_POST[$appname."_Eco2"])) {
-          // echo ($_POST[$appname."_Eco1"]);
-          // echo ($_POST[$appname."_Eco2"]);
-          $CO2IncPerRow = $_POST[$appname]*($CO2ValuesArr[$row["API_Normal"]]-$CO2ValuesArr[$row["API_Eco2"]])*28307;
+          $CO2IncPerRow = $_POST[$appname]*($CO2ValuesArr[$row["API_Normal"]]-$CO2ValuesArr[$row["API_Eco2"]])*283.07;
 
 
         } else {
           if(isset($_POST[$appname."_Eco2"])) {
-            // echo ($_POST[$appname."_Eco2"]);
-            $CO2IncPerRow = $_POST[$appname]*($CO2ValuesArr[$row["API_Eco1"]]-$CO2ValuesArr[$row["API_Eco2"]])*28307;
+            $CO2IncPerRow = $_POST[$appname]*($CO2ValuesArr[$row["API_Eco1"]]-$CO2ValuesArr[$row["API_Eco2"]])*283.07;
 
 
           } else {
             if(isset($_POST[$appname."_Eco1"])) {
-              // echo ($_POST[$appname."_Eco1"]);
-              $CO2IncPerRow = $_POST[$appname]*($CO2ValuesArr[$row["API_Normal"]]-$CO2ValuesArr[$row["API_Eco1"]])*28307;
+              $CO2IncPerRow = $_POST[$appname]*($CO2ValuesArr[$row["API_Normal"]]-$CO2ValuesArr[$row["API_Eco1"]])*283.07;
             } else {
+              // If there is an eco mode available but not used, then update the Eco recommendation value to 1
+              // This will prompt an alert on the homepage when the page loads
                 setcookie('Eco_Rec', 1);
             };
 
 
-    // $CO2IncPerRow = $_POST[$appname]*($CO2ValuesArr[$row["API_Normal"]]-$CO2ValuesArr[$row["API_Eco1"]])*28307;
-    // echo "<br /> Normal: ";
-    // echo $CO2ValuesArr[$row["API_Normal"]];
-    // echo "<br /> Eco1: ";
-    // echo $CO2ValuesArr[$row["API_Eco1"]];
-    // echo "<br /> Eco2: ";
-    // echo $CO2ValuesArr[$row["API_Eco2"]];
-
 }}};
 
-		//$CO2IncPerRow = $_POST[$appname]*($row["Appliance_CO2"]-)
-  // echo "<br /> Inc Per Row: ";
-  // echo $CO2IncPerRow;
+// Tally the total from each row
 	$CO2Increase=$CO2Increase+$CO2IncPerRow;
-  // echo "<br /> Increase: ";
-  // echo $CO2Increase;
+
 }
 };
 
-
+// SQL Query to update the CO2Count for the user to the new total
 $username=$_SESSION["username"];
 $CO2UPQuery = "UPDATE CO2Accounts SET CO2Count=CO2Count+$CO2Increase WHERE username='$username'";
 $CO2UPResult = mysqli_query($conn, $CO2UPQuery);
-setcookie('CO2Count', ($_COOKIE['CO2Count']+$CO2Increase));
-// mysqli_fetch_assoc($CO2UPResult);
 
-// echo $username;
-// echo $CO2Increase;
+// Update the cookies to reflect new value
+setcookie('CO2Count', ($_COOKIE['CO2Count']+$CO2Increase));
 setcookie('CO2Increase', $CO2Increase);
+// Set cookie depending on whether or not CO2 has been saved or not
 if ($CO2Increase>0){
   setcookie('CO2Saved', 1);
 };
 if ($CO2Increase<0){
   setcookie('CO2Saved', 0);
 };
-// echo "Pre run";
-// darkenBackground();
-// echo "Post run";
 
+// Return to homepage
 header("Location: home.php");
 exit;
 ?>
