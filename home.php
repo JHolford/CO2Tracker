@@ -138,19 +138,35 @@ while ($row = mysqli_fetch_assoc($result)) {
     }
 
     // Set the username and password
+    if ($row['username:password']!=""){
     curl_setopt($ch, CURLOPT_USERPWD, $row['username:password']);
+    };
+
+    // Edit request type to GET, if applicable
+    if ($row['Get']==1){
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+    };
 
     // Set the content type to application/json
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array("Accept: application/json"));
-
+    if ($row['contentType']!=""){
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array($row['contentType']));
+    };
     // Return response instead of outputting
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-    // Execute the POST request
+    // Execute the request
     ${$row["JSON_Name"]} = curl_exec($ch);
-    // prettyPrint(${$row["JSON_Name"]});
+
+    if ($row['Get']==1){
+    ${$row["JSON_Name"]} = json_encode(${$row["JSON_Name"]});
+    };
+
+
     // Save the JSON to a Cookie
     setcookie($row["JSON_Name"], gzdeflate(${$row["JSON_Name"]},9));
+
+
+
 
     // Close cURL resource
     curl_close($ch);
