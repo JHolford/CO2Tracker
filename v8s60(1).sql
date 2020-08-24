@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 17, 2020 at 07:05 PM
+-- Generation Time: Aug 24, 2020 at 05:59 PM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.3
 
@@ -40,7 +40,7 @@ CREATE TABLE `co2accounts` (
 --
 
 INSERT INTO `co2accounts` (`Account_ID`, `username`, `password`, `CO2Count`) VALUES
-(1, 'v8s60', '$2y$10$7Ro0N0kvqyC3YcvUgUa.9OeQlX5d1gKS7Nm9EanjYqu9PGB6P057G', 704241),
+(1, 'v8s60', '$2y$10$7Ro0N0kvqyC3YcvUgUa.9OeQlX5d1gKS7Nm9EanjYqu9PGB6P057G', 703201),
 (3, 'chloe2312', '$2y$10$8yOncbQl1CEUS2znnClREeNREzP0A5QXdo7N1ZkP6t7JB0oj/YftW', 0);
 
 -- --------------------------------------------------------
@@ -86,6 +86,8 @@ CREATE TABLE `co2modules` (
   `JSON_Name` varchar(64) NOT NULL,
   `API_URL` varchar(256) NOT NULL,
   `username:password` varchar(64) NOT NULL,
+  `contentType` varchar(128) NOT NULL,
+  `Get` tinyint(1) NOT NULL,
   `Query1` varchar(64) NOT NULL,
   `Param1` varchar(64) NOT NULL,
   `Query2` varchar(64) NOT NULL,
@@ -96,9 +98,9 @@ CREATE TABLE `co2modules` (
 -- Dumping data for table `co2modules`
 --
 
-INSERT INTO `co2modules` (`Module_ID`, `Module_Name`, `Module_File`, `JSON_Name`, `API_URL`, `username:password`, `Query1`, `Param1`, `Query2`, `Param2`) VALUES
-(2, 'Appliances', 'appliance.php', 'Appliance_JSON', 'https://api.carbonkit.net/3.6/categories/Kitchen_generic/items;values?kWhPerYear=0&resultStart=0&resultLimit=50', 'v8s60:BasicAPIPassword1', '', '', '', ''),
-(3, 'Social', 'social.php', '', '', '', '', '', '', '');
+INSERT INTO `co2modules` (`Module_ID`, `Module_Name`, `Module_File`, `JSON_Name`, `API_URL`, `username:password`, `contentType`, `Get`, `Query1`, `Param1`, `Query2`, `Param2`) VALUES
+(2, 'Appliances', 'appliance.php', 'Appliance_JSON', 'https://api.carbonkit.net/3.6/categories/Kitchen_generic/items;values?kWhPerYear=0&resultStart=0&resultLimit=50', 'v8s60:BasicAPIPassword1', 'Accept: application/json', 0, '', '', '', ''),
+(3, 'Social', 'social.php', 'socialJSON', 'https://my-json-server.typicode.com/jholford/CO2DBJSON/db', '', '', 1, '', '', '', '');
 
 --
 -- Indexes for dumped tables
