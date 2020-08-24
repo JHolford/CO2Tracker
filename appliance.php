@@ -2,6 +2,7 @@
 
 include("connection.php");
 
+//as the cookie can not be written and read on the same page load, this forces a refresh on first load.
 if (!isset($_COOKIE['Appliance_JSON'])){
   header("Location: home.php");
   exit;

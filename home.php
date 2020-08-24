@@ -142,7 +142,7 @@ while ($row = mysqli_fetch_assoc($result)) {
     curl_setopt($ch, CURLOPT_USERPWD, $row['username:password']);
     };
 
-    // Edit request type to GET, if applicable
+    // Edit request type to GET (Default is POST), if applicable
     if ($row['Get']==1){
     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
     };
@@ -157,16 +157,8 @@ while ($row = mysqli_fetch_assoc($result)) {
     // Execute the request
     ${$row["JSON_Name"]} = curl_exec($ch);
 
-    if ($row['Get']==1){
-    ${$row["JSON_Name"]} = json_encode(${$row["JSON_Name"]});
-    };
-
-
-    // Save the JSON to a Cookie
+      // Save the JSON to a Cookie
     setcookie($row["JSON_Name"], gzdeflate(${$row["JSON_Name"]},9));
-
-
-
 
     // Close cURL resource
     curl_close($ch);
