@@ -2,6 +2,11 @@
 
 include("connection.php");
 
+if (!isset($_COOKIE['Appliance_JSON'])){
+  header("Location: home.php");
+  exit;
+} else {
+
 // Query the appliance list from the database
 $ApplianceQuery = "SELECT * FROM CO2Appliances";
 $AppResult = mysqli_query($conn, $ApplianceQuery);
@@ -61,5 +66,5 @@ while ($row = mysqli_fetch_assoc($AppResult)) {
 // This could probably be moved to a floating point on the page so that it is always present
 echo ("<input class='button' type='submit' value='Submit'>");
 echo ("</form>");
-
+};
 ?>
