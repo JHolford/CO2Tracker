@@ -106,7 +106,7 @@ if ($_COOKIE["CO2Increase"]!=0){
     echo ' if(alert("Oh No!\n\nUnfortunately you\'ve just generated ';
     // Display CO2 figure in kg and round to 2 decimal places
     echo (number_format((float)(-$_COOKIE["CO2Increase"]/1000), 2, '.', ''));
-    echo 'kg more CO2 compared to the UK Average for the tracked activity :(';
+    echo 'kg more CO2 compared to the UK Average for the tracked activity';
     // if an appliance was tracked that has an Eco mode, but a eco mode was not used then prompt the user to use the eco mode next time.
     if ($_COOKIE["Eco_Rec"]==1){
       echo ('\n\n To improve your energy savings, try using an Eco setting, where available!');
