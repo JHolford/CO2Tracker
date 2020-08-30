@@ -49,13 +49,50 @@ if ($_COOKIE["CO2Increase"]!=0){
        setcookie('BackGreen', $_COOKIE['BackGreen']+5);
     };
     // Give the user a positive message for encouragement
-    echo ' if(alert("Well Done! You\'ve just saved ';
+    echo (' if(alert("');
+    //Generate random number and based on this number, change the positive phrase shown to the user.
+    // 10 Phrases because of Fogg's research
+    $phraseChoice=rand(1,10);
+    switch ($phraseChoice){
+      case 1:
+        echo ('Well Done!');
+        break;
+      case 2:
+        echo ('Fantastic!');
+        break;
+      case 3:
+        echo ('I\'m impressed!');
+        break;
+      case 4:
+        echo ('Nice work!');
+        break;
+      case 5:
+        echo ('Hurray for you!');
+        break;
+      case 6:
+        echo ('Outstanding!');
+        break;
+      case 7:
+        echo ('You\'re the best!');
+        break;
+      case 8:
+        echo ('Wonderful!');
+        break;
+      case 9:
+        echo ('Way to go!');
+        break;
+      case 10:
+        echo ('You\'ve made progress!');
+        break;
+}
+
+    echo ('\n\nYou\'ve just saved ');
     // Display CO2 figure in kg and round to 2 decimal places
     echo (number_format((float)($_COOKIE["CO2Increase"]/1000), 2, '.', ''));
     echo 'kg of CO2 compared to the UK Average for the tracked activity';
     // if an appliance was tracked that has an Eco mode, but a eco mode was not used then prompt the user to use the eco mode next time.
     if ($_COOKIE["Eco_Rec"]==1){
-      echo ('\n\n To further improve your energy savings, try using an Eco setting, where available!');
+      echo ('\n\nTo further improve your energy savings, try using an Eco setting, where available!');
     };
   }else{
     // CO2 figure decreased = negative outcome
@@ -66,7 +103,7 @@ if ($_COOKIE["CO2Increase"]!=0){
      setcookie('BackGreen', $_COOKIE['BackGreen']-5);
    };
    // Give the user negative feedback
-    echo ' if(alert("Oh No! Unfortunately you\'ve just generated ';
+    echo ' if(alert("Oh No!\n\nUnfortunately you\'ve just generated ';
     // Display CO2 figure in kg and round to 2 decimal places
     echo (number_format((float)(-$_COOKIE["CO2Increase"]/1000), 2, '.', ''));
     echo 'kg more CO2 compared to the UK Average for the tracked activity :(';
