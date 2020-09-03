@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 24, 2020 at 05:59 PM
+-- Generation Time: Sep 03, 2020 at 10:23 AM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.3
 
@@ -40,7 +40,7 @@ CREATE TABLE `co2accounts` (
 --
 
 INSERT INTO `co2accounts` (`Account_ID`, `username`, `password`, `CO2Count`) VALUES
-(1, 'v8s60', '$2y$10$7Ro0N0kvqyC3YcvUgUa.9OeQlX5d1gKS7Nm9EanjYqu9PGB6P057G', 703201),
+(1, 'v8s60', '$2y$10$7Ro0N0kvqyC3YcvUgUa.9OeQlX5d1gKS7Nm9EanjYqu9PGB6P057G', 703451),
 (3, 'chloe2312', '$2y$10$8yOncbQl1CEUS2znnClREeNREzP0A5QXdo7N1ZkP6t7JB0oj/YftW', 0);
 
 -- --------------------------------------------------------
