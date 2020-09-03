@@ -10,6 +10,11 @@
   $password = "v8s60v8s60";
   $dbname = "v8s60";
 
+  // $servername = 'localhost';
+  // $username = 'root';
+  // $password = '';
+  // $dbname = 'v8s60';
+
   // Create connection
   $conn = mysqli_connect($servername, $username, $password, $dbname);
 
