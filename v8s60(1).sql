@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 03, 2020 at 10:23 AM
+-- Generation Time: Sep 03, 2020 at 10:25 AM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.3
 
@@ -41,7 +41,8 @@ CREATE TABLE `co2accounts` (
 
 INSERT INTO `co2accounts` (`Account_ID`, `username`, `password`, `CO2Count`) VALUES
 (1, 'v8s60', '$2y$10$7Ro0N0kvqyC3YcvUgUa.9OeQlX5d1gKS7Nm9EanjYqu9PGB6P057G', 703451),
-(3, 'chloe2312', '$2y$10$8yOncbQl1CEUS2znnClREeNREzP0A5QXdo7N1ZkP6t7JB0oj/YftW', 0);
+(3, 'chloe2312', '$2y$10$8yOncbQl1CEUS2znnClREeNREzP0A5QXdo7N1ZkP6t7JB0oj/YftW', 0),
+(4, 'user', '$2y$10$WFXjvR/tg/xQF.lU0LwIwugt/7Q9zDXwAsJrwMDShnRc1eRt..RXi', 345126);
 
 -- --------------------------------------------------------
 
@@ -132,7 +133,7 @@ ALTER TABLE `co2modules`
 -- AUTO_INCREMENT for table `co2accounts`
 --
 ALTER TABLE `co2accounts`
-  MODIFY `Account_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `Account_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `co2appliances`
