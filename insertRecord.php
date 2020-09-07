@@ -1,12 +1,13 @@
 <!-- This file is reused from the Web Tech Module Coursework -->
 <?php
 include("connection.php");
-
-$username = $_POST['username'];
+session_start();
+$newUsername = $_POST['username'];
 //Break if user didn't set a username
 if ($_POST['username']=="") {
 	// FAILURE
-	echo ("<script type='text/javascript'>alert('Account creation failed, please try again!');</script>");
+	// echo ("<script type='text/javascript'>alert('Account creation failed, please try again!');</script>");
+	setcookie("AccountCreated", 2);
 	$location = 'registration.php';
 	header("Location: $location");
 	exit;
@@ -14,14 +15,15 @@ if ($_POST['username']=="") {
 //Break if user didn't set a password
 if ($_POST['password']=="") {
 	// FAILURE
-	echo ("<script type='text/javascript'>alert('Account creation failed, please try again!');</script>");
+	// echo ("<script type='text/javascript'>alert('Account creation failed, please try again!');</script>");
+	setcookie("AccountCreated", 2);
 	$location = 'registration.php';
 	header("Location: $location");
 	exit;
 }
 else{
 	//Encrypt password using sha1
-$password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+$newPassword = password_hash($_POST['password'], PASSWORD_DEFAULT);
 
 
 $passQuery = "SELECT * FROM co2accounts";
@@ -34,10 +36,10 @@ while($row = mysqli_fetch_assoc($result)) {
 				}
 
 mysqli_close($conn);
-if($passlist[$username]!=''){
+if($passlist[$newUsername]!=''){
 	// already exists
-	echo ("<script type='text/javascript'>alert('Account creation failed! Username already taken!');</script>");
-
+	// echo ("<script type='text/javascript'>alert('Account creation failed! Username already taken!');</script>");
+	setcookie("AccountCreated", 3);
 	$location = 'registration.php';
 	header("Location: $location");
 	exit;
@@ -52,7 +54,7 @@ if($passlist[$username]!=''){
  * password never has to be stored
  */
 include("connection.php");
-$accountQuery = "INSERT INTO co2accounts (`Account_ID`,`username`,`password`,`CO2Count`) VALUES (NULL,'$username','$password',0)";
+$accountQuery = "INSERT INTO co2accounts (`Account_ID`,`username`,`password`,`CO2Count`) VALUES (NULL,'$newUsername','$newPassword',0)";
 $accountAdd = mysqli_query($conn, $accountQuery);
 mysqli_close($conn);
 include("connection.php");
@@ -70,14 +72,15 @@ while($row = mysqli_fetch_assoc($result)) {
 
 
 
-if($passlist[$username]==$password){
+if($passlist[$newUsername]==$newPassword){
 	// SUCCESS
-	echo ("<script type='text/javascript'>alert('Account Created! Please login!');</script>");
-
+	// echo ("<script type='text/javascript'>alert('Account Created! Please login!');</script>");
+	setcookie("AccountCreated", 1);
 	$location = 'login.php';
 }else{
 	// FAILURE
-	echo ("<script type='text/javascript'>alert('Account creation failed, please try again!');</script>");
+	// echo ("<script type='text/javascript'>alert('Account creation failed, please try again!');</script>");
+	setcookie("AccountCreated", 2);
 	$location = 'registration.php';
 
 }

@@ -15,7 +15,16 @@
    <!-- Include navbar -->
    <?php
    include("navbar.php");
+// If account has just been created, show alert letting the user know that they were successful
+   if(isset($_COOKIE['AccountCreated'])){
+       if ($_COOKIE['AccountCreated']==1){
+       // SUCCESS
+       echo ("<script type='text/javascript'>alert('Account Created! Please login!');</script>");
+       setcookie("AccountCreated", 0);
+     };
+   };
    ?>
+
 <!-- Create container in the centre of the screen -->
          <div  class="row  justify-content-center">
              <div >

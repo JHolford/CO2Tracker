@@ -120,15 +120,22 @@ while ($row = mysqli_fetch_assoc($AppResult)) {
 
 }
 };
-
-// SQL Query to update the CO2Count for the user to the new total
 $username=$_SESSION["username"];
-$CO2UPQuery = "UPDATE co2accounts SET CO2Count=CO2Count+$CO2Increase WHERE username='$username'";
-$CO2UPResult = mysqli_query($conn, $CO2UPQuery);
+if ($CO2Increase + $_COOKIE['CO2Count']>0){
+  // SQL Query to update the CO2Count for the user to the new total
+  $CO2UPQuery = "UPDATE co2accounts SET CO2Count=CO2Count+$CO2Increase WHERE username='$username'";
+  $CO2UPResult = mysqli_query($conn, $CO2UPQuery);
+  // Update the cookies to reflect new value
+  setcookie('CO2Count', ($_COOKIE['CO2Count']+$CO2Increase));
+  setcookie('CO2Increase', $CO2Increase);
+} else {
+  $CO2UPQuery = "UPDATE co2accounts SET CO2Count=0 WHERE username='$username'";
+  $CO2UPResult = mysqli_query($conn, $CO2UPQuery);
+  // Update the cookies to reflect new value
+  setcookie('CO2Count', 0);
+  setcookie('CO2Increase', $CO2Increase);
+};
 
-// Update the cookies to reflect new value
-setcookie('CO2Count', ($_COOKIE['CO2Count']+$CO2Increase));
-setcookie('CO2Increase', $CO2Increase);
 // Set cookie depending on whether or not CO2 has been saved or not
 if ($CO2Increase>0){
   setcookie('CO2Saved', 1);

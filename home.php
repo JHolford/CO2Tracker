@@ -111,6 +111,9 @@ if ($_COOKIE["CO2Increase"]!=0){
     if ($_COOKIE["Eco_Rec"]==1){
       echo ('\n\n To improve your energy savings, try using an Eco setting, where available!');
     };
+    if ($_COOKIE["CO2Count"]==0){
+      echo ('\n\n Don\'t worry, your total cannot be decreased beyond zero.');
+    };
   }
 // On closing the alert window, refresh the page. This updates the background color to the new value
   echo '")){} else window.location.reload()</script>';
@@ -122,7 +125,11 @@ if ($_COOKIE["CO2Increase"]!=0){
   if ($_COOKIE["Eco_Rec"]==1){
     echo '<script type="text/javascript">';
     // Although reloading the page in this context (No background green level changes), the oage is reloaded for consistency.
-    echo ' if(alert("To improve your energy savings, try using an Eco setting, where available!")){} else window.location.reload()';
+    echo ' if(alert("To improve your energy savings, try using an Eco setting, where available!';
+    if ($_COOKIE["CO2Count"]==0){
+      echo ('\n\n Don\'t worry, your total cannot be decreased beyond zero.');
+    };
+    echo '")){} else window.location.reload()';
     echo '</script>';
     //reset cookies to prevent additional alerts
     setcookie("Eco_Rec", 0);

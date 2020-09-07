@@ -12,6 +12,20 @@
 <?php
 // Include navbar
 include("navbar.php");
+
+// If account creation has failed, show alert letting the user know that they were unsuccessful and why
+   if(isset($_COOKIE['AccountCreated'])){
+       if ($_COOKIE['AccountCreated']==2){
+       // Generic Failure
+       echo ("<script type='text/javascript'>alert('Account creation failed, please try again!');</script>");
+       setcookie("AccountCreated", 0);
+     };
+     if ($_COOKIE['AccountCreated']==3){
+     // Username already taken
+     echo ("<script type='text/javascript'>alert('Account creation failed! Username already taken!');</script>");
+     setcookie("AccountCreated", 0);
+   };
+   };
 ?>
   <h2>Registration</h2>
 
