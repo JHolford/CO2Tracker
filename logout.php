@@ -1,5 +1,5 @@
+<!-- This file is reused from the Web Tech Module Coursework -->
 <?php
-
 
 //destroys the session so next time session_start() is run a new session id will be generated
 session_start();
@@ -10,10 +10,10 @@ unset($_SESSION['username']);
 <html>
  <head>
    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-   <link rel="stylesheet" href="cwStyle.css" >
+   <link rel="stylesheet" href="Style.css" >
   <title>Logout</title>
  </head>
- <body class="sitewide">
+ <body>
    <?php
    include("navbar.php");
    ?>

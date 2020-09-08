@@ -1,6 +1,6 @@
 <?php
 
-
+// This file is reused from the Web Tech Module Coursework
 // If the session check is unsuccessful the browser is redirected to the badauth page.
 //Otherwise this file does nothing (so the file that includes it will carry on as normal)
 
